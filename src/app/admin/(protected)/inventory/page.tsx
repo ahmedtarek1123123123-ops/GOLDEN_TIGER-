@@ -14,7 +14,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Package, Plus, Search, Pencil, Trash2, Loader2, AlertCircle, Sparkles } from 'lucide-react';
+import { Package, Plus, Search, Pencil, Trash2, Loader as Loader2, CircleAlert as AlertCircle, Sparkles } from 'lucide-react';
 import { formatPrice } from '@/lib/pricing';
 
 interface Product {
@@ -73,7 +73,7 @@ export default function AdminInventoryPage() {
   const loadProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const params = new URLSearchParams({ page: String(page), limit: '20' });
+      const params = new URLSearchParams({ page: String(page), limit: '50' });
       if (search) params.set('search', search);
       const res = await fetch(`/api/admin/products?${params}`);
       if (res.ok) {

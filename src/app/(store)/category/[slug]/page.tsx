@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronRight, Home } from 'lucide-react';
+import { ChevronRight, Chrome as Home } from 'lucide-react';
 import { SafeImage } from '@/components/ui/SafeImage';
 import { CategoryProducts } from '@/components/product/CategoryProducts';
 import {
@@ -11,6 +11,7 @@ import {
 
 interface CategoryPageProps {
   params: { slug: string };
+  searchParams: { page?: string };
 }
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
@@ -24,13 +25,15 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   };
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
+export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
   const category = await getCategoryBySlug(params.slug);
   if (!category) {
     notFound();
   }
 
-  const products = await getProductsByCategory(params.slug);
+  const page = Math.max(1, parseInt(searchParams.page ?? '1', 10) || 1);
+  const { products, total, page: currentPage, pageSize } = await getProductsByCategory(params.slug, page);
+  const totalPages = Math.ceil(total / pageSize);
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -59,7 +62,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             {category.name}
           </h1>
           <p className="text-sm text-muted mt-1">
-            {products.length} products available
+            {total} products available
           </p>
         </div>
       </div>
@@ -79,7 +82,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         </div>
       )}
 
-      <CategoryProducts products={products} />
+      <CategoryProducts
+        products={products}
+        page={currentPage}
+        totalPages={totalPages}
+        total={total}
+      />
     </div>
   );
 }

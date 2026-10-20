@@ -140,7 +140,7 @@ export default function AccountPage() {
                       )}
                       <div className="text-xs">
                         <p className="text-text line-clamp-1 max-w-[120px]">{item.title}</p>
-                        <p className="text-muted">{t('common.qty').replace('{qty}', String(item.quantity))}</p>
+                        <p className="text-muted">{t('common.qty', { qty: item.quantity })}</p>
                       </div>
                     </div>
                   ))}

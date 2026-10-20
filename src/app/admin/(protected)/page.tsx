@@ -101,21 +101,21 @@ export default function AdminOverviewPage() {
         <KPICard
           label={t('admin.overview.totalOrders')}
           value={kpis.totalOrders.toString()}
-          subtext={t('admin.overview.completedCount').replace('{count}', String(kpis.completedOrders))}
+          subtext={t('admin.overview.completedCount', { count: kpis.completedOrders })}
           icon={ShoppingCart}
           color="text-tiger-orange"
         />
         <KPICard
           label={t('admin.overview.ctr')}
           value={`${kpis.ctr}%`}
-          subtext={t('admin.overview.ctrSubtext').replace('{clicks}', String(kpis.totalClicks)).replace('{impressions}', String(kpis.totalImpressions))}
+          subtext={t('admin.overview.ctrSubtext', { clicks: kpis.totalClicks, impressions: kpis.totalImpressions })}
           icon={MousePointerClick}
           color="text-green-400"
         />
         <KPICard
           label={t('admin.overview.conversionRate')}
           value={`${kpis.conversionRate}%`}
-          subtext={t('admin.overview.ordersToday').replace('{count}', String(kpis.todayOrders))}
+          subtext={t('admin.overview.ordersToday', { count: kpis.todayOrders })}
           icon={TrendingUp}
           color="text-blue-400"
         />
@@ -189,7 +189,7 @@ export default function AdminOverviewPage() {
                 <div key={p.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
                   <span className="text-sm text-text truncate">{p.title}</span>
                   <span className={`text-sm font-semibold ${p.stock === 0 ? 'text-danger' : 'text-tiger-orange'}`}>
-                    {p.stock === 0 ? t('admin.overview.outOfStock') : t('admin.overview.stockLeft').replace('{count}', String(p.stock))}
+                    {p.stock === 0 ? t('admin.overview.outOfStock') : t('admin.overview.stockLeft', { count: p.stock })}
                   </span>
                 </div>
               ))}

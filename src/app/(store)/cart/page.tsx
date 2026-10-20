@@ -52,7 +52,7 @@ export default function CartPage() {
           <BackIcon className="h-5 w-5" />
         </Link>
         <h1 className="font-heading text-2xl font-bold text-text">{t('cart.title')}</h1>
-        <span className="text-sm text-muted">{t('cart.itemsCount').replace('{count}', String(breakdown.itemCount))}</span>
+        <span className="text-sm text-muted">{t('cart.itemsCount', { count: breakdown.itemCount })}</span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -64,7 +64,7 @@ export default function CartPage() {
               <Truck className="h-4 w-4 text-gold" />
               {breakdown.amountUntilFreeShipping > 0 ? (
                 <p className="text-sm text-text">
-                  {t('cart.addMoreForFreeShipping').replace('{amount}', formatPrice(breakdown.amountUntilFreeShipping))}
+                  {t('cart.addMoreForFreeShipping', { amount: formatPrice(breakdown.amountUntilFreeShipping) })}
                 </p>
               ) : (
                 <p className="text-sm text-success font-medium">
@@ -103,9 +103,9 @@ export default function CartPage() {
                     >
                       {item.title}
                     </Link>
-                    <p className="text-xs text-muted mt-1">{t('cart.each').replace('{price}', formatPrice(item.unitPrice))}</p>
+                    <p className="text-xs text-muted mt-1">{t('cart.each', { price: formatPrice(item.unitPrice) })}</p>
                     {atMax && item.stock > 0 && (
-                      <p className="text-xs text-amber-500 mt-1">{t('cart.maxPerOrder').replace('{max}', String(maxQty))}</p>
+                      <p className="text-xs text-amber-500 mt-1">{t('cart.maxPerOrder', { max: maxQty })}</p>
                     )}
                     <div className="flex items-center justify-between mt-3 flex-wrap gap-2">
                       <div className="flex items-center gap-3">
@@ -121,7 +121,7 @@ export default function CartPage() {
                         <button
                           onClick={() => removeItem(item.id)}
                           className="flex items-center gap-1 text-xs text-muted hover:text-danger transition-colors"
-                          aria-label={t('cart.removeAria').replace('{title}', item.title)}
+                          aria-label={t('cart.removeAria', { title: item.title })}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                           {t('cart.remove')}
@@ -144,7 +144,7 @@ export default function CartPage() {
             <h2 className="font-heading text-lg font-bold text-text mb-4">{t('common.orderSummary')}</h2>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted">{t('cart.subtotalItems').replace('{count}', String(breakdown.itemCount))}</span>
+                <span className="text-muted">{t('cart.subtotalItems', { count: breakdown.itemCount })}</span>
                 <span className="text-text font-medium">{formatPrice(breakdown.subtotal)}</span>
               </div>
               <div className="flex justify-between">

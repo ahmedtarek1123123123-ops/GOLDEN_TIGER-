@@ -555,7 +555,7 @@ export default function CheckoutPage() {
 
               {/* Line items */}
               <div>
-                <h3 className="text-sm font-semibold text-text mb-2">{t('common.itemsCount').replace('{count}', String(breakdown.itemCount))}</h3>
+                <h3 className="text-sm font-semibold text-text mb-2">{t('common.itemsCount', { count: breakdown.itemCount })}</h3>
                 <div className="space-y-3">
                   {items.map((item) => (
                     <div key={item.id} className="flex gap-3 items-center">
@@ -568,7 +568,7 @@ export default function CheckoutPage() {
                       />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-text line-clamp-1">{item.title}</p>
-                        <p className="text-xs text-muted">{t('common.qty').replace('{qty}', String(item.quantity))} x {formatPrice(item.unitPrice)}</p>
+                        <p className="text-xs text-muted">{t('common.qty', { qty: item.quantity })} x {formatPrice(item.unitPrice)}</p>
                       </div>
                       <span className="text-sm font-semibold text-text">
                         {formatPrice(item.unitPrice * item.quantity)}
@@ -699,7 +699,7 @@ export default function CheckoutPage() {
                 ) : (
                   <>
                     <Lock className="h-4 w-4" />
-                    {t('checkout.pay').replace('{amount}', formatPrice(breakdown.total))}
+                    {t('checkout.pay', { amount: formatPrice(breakdown.total) })}
                   </>
                 )}
               </button>
@@ -723,7 +723,7 @@ export default function CheckoutPage() {
             className="w-full lg:hidden flex items-center justify-between p-4 rounded-lg bg-surface border border-border mb-4"
           >
             <span className="text-sm font-semibold text-text">
-              {t('checkout.orderSummaryWithTotal').replace('{total}', formatPrice(breakdown.total))}
+              {t('checkout.orderSummaryWithTotal', { total: formatPrice(breakdown.total) })}
             </span>
             <ChevronLeft className={cn('h-4 w-4 text-muted transition-transform', summaryOpen && '-rotate-90')} />
           </button>

@@ -92,7 +92,7 @@ export function BuyBox({ product }: { product: Product }) {
         )}
         {stockVariant === 'low' && (
           <span className={cn('inline-flex items-center gap-1.5 text-sm font-medium text-amber-500', dir === 'rtl' && 'flex-row-reverse')}>
-            <span className="h-2 w-2 rounded-full bg-amber-500" /> {t('product.lowStock').replace('{n}', String(product.stock))}
+            <span className="h-2 w-2 rounded-full bg-amber-500" /> {t('product.lowStock', { n: product.stock })}
           </span>
         )}
         {stockVariant === 'out' && (
@@ -112,7 +112,7 @@ export function BuyBox({ product }: { product: Product }) {
             onChange={setQuantity}
           />
           {quantity >= maxQty && (
-            <span className="text-xs text-amber-500">{t('product.maxPerOrder').replace('{n}', String(maxQty))}</span>
+            <span className="text-xs text-amber-500">{t('product.maxPerOrder', { n: maxQty })}</span>
           )}
         </div>
       )}
@@ -161,7 +161,7 @@ export function BuyBox({ product }: { product: Product }) {
         <Sparkles className="h-5 w-5 text-gold shrink-0" />
         <div>
           <p className="text-sm font-semibold text-gold">
-            {t('product.earnPoints').replace('{n}', pointsEarned.toLocaleString())}
+            {t('product.earnPoints', { n: pointsEarned.toLocaleString() })}
           </p>
           <p className="text-xs text-muted">
             {t('product.pointsRate')}

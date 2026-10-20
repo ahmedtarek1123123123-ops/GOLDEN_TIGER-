@@ -8,7 +8,7 @@ interface I18nContextValue {
   locale: Locale;
   setLocale: (locale: Locale) => void;
   toggleLocale: () => void;
-  t: (key: string) => string;
+  t: (key: string, vars?: Record<string, string | number>) => string;
   dir: 'ltr' | 'rtl';
 }
 
@@ -1085,8 +1085,8 @@ const dict: Record<Locale, Record<string, string>> = {
   },
 };
 
-export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('en');
+export function I18nProvider({ children, initialLocale = 'en' }: { children: React.ReactNode; initialLocale?: Locale }) {
+  const [locale, setLocaleState] = useState<Locale>(initialLocale);
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY) as Locale | null;
@@ -1104,19 +1104,27 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const setLocale = useCallback((l: Locale) => {
     setLocaleState(l);
     localStorage.setItem(STORAGE_KEY, l);
+    document.cookie = `${STORAGE_KEY}=${l}; path=/; max-age=31536000; samesite=lax`;
   }, []);
 
   const toggleLocale = useCallback(() => {
     setLocaleState((prev) => {
       const next = prev === 'en' ? 'ar' : 'en';
       localStorage.setItem(STORAGE_KEY, next);
+      document.cookie = `${STORAGE_KEY}=${next}; path=/; max-age=31536000; samesite=lax`;
       return next;
     });
   }, []);
 
   const t = useCallback(
-    (key: string) => {
-      return dict[locale][key] ?? dict.en[key] ?? key;
+    (key: string, vars?: Record<string, string | number>) => {
+      let str = dict[locale][key] ?? dict.en[key] ?? key;
+      if (vars) {
+        for (const [k, v] of Object.entries(vars)) {
+          str = str.replace(new RegExp(`\{${k}\}`, 'g'), String(v));
+        }
+      }
+      return str;
     },
     [locale]
   );

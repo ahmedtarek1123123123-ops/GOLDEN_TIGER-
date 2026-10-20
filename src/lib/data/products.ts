@@ -50,7 +50,7 @@ export async function getFeaturedProducts(): Promise<Product[]> {
     .from('products')
     .select('*')
     .eq('is_published', true)
-    .filter('tags', 'cs', '"{""bestseller""}"')
+    .filter('tags', 'cs', '{bestseller}')
     .order('rating', { ascending: false })
     .limit(8);
 
@@ -59,8 +59,12 @@ export async function getFeaturedProducts(): Promise<Product[]> {
   return (data as ProductRow[]).map(mapProductRow);
 }
 
-export async function getProductsByCategory(slug: string): Promise<Product[]> {
-  if (!isDatabaseConfigured()) return [];
+export async function getProductsByCategory(
+  slug: string,
+  page: number = 1,
+  pageSize: number = 24
+): Promise<{ products: Product[]; total: number; page: number; pageSize: number }> {
+  if (!isDatabaseConfigured()) return { products: [], total: 0, page, pageSize };
   ensureDatabaseConfigured();
 
   const { data: cat } = await supabase
@@ -68,7 +72,7 @@ export async function getProductsByCategory(slug: string): Promise<Product[]> {
     .select('id')
     .eq('slug', slug)
     .maybeSingle();
-  if (!cat) return [];
+  if (!cat) return { products: [], total: 0, page, pageSize };
 
   const { data: subcats } = await supabase
     .from('categories')
@@ -77,18 +81,22 @@ export async function getProductsByCategory(slug: string): Promise<Product[]> {
 
   const categoryIds = [cat.id, ...((subcats ?? []).map((s: { id: string }) => s.id))];
 
-  const { data, error } = await supabase
+  const from = (page - 1) * pageSize;
+  const to = page * pageSize - 1;
+
+  const { data, count, error } = await supabase
     .from('products')
-    .select('*')
+    .select('*', { count: 'exact' })
     .in('category_id', categoryIds)
     .eq('is_published', true)
     .order('is_sponsored', { ascending: false })
     .order('ad_priority', { ascending: false })
-    .order('created_at', { ascending: true });
+    .order('created_at', { ascending: true })
+    .range(from, to);
 
-  if (error) { console.error('[getProductsByCategory] Supabase error:', error.message); return []; }
-  if (!data) return [];
-  return (data as ProductRow[]).map(mapProductRow);
+  if (error) { console.error('[getProductsByCategory] Supabase error:', error.message); return { products: [], total: 0, page, pageSize }; }
+  if (!data) return { products: [], total: 0, page, pageSize };
+  return { products: (data as ProductRow[]).map(mapProductRow), total: count ?? 0, page, pageSize };
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {

@@ -25,10 +25,10 @@ export default async function HomePage() {
   ]);
 
   const productsByCategory = await Promise.all(
-    categories.map(async (cat) => ({
-      category: cat,
-      products: await getProductsByCategory(cat.slug),
-    }))
+    categories.map(async (cat) => {
+      const result = await getProductsByCategory(cat.slug, 1, 10);
+      return { category: cat, products: result.products };
+    })
   );
 
   const allProducts = productsByCategory.flatMap(({ products }) => products);

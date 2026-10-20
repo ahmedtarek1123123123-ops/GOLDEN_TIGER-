@@ -126,7 +126,7 @@ export function Header({ categories }: HeaderProps) {
               <button
                 onClick={openMiniCart}
                 className="relative flex items-center justify-center h-10 w-10 rounded-lg hover:bg-surface-elevated focus-ring text-text"
-aria-label={t('home.cartItems').replace('{n}', String(hydrated ? itemCount : 0))}
+aria-label={t('home.cartItems', { n: hydrated ? itemCount : 0 })}
               >
                 <ShoppingCart className="h-5 w-5" />
                 {hydrated && itemCount > 0 && (

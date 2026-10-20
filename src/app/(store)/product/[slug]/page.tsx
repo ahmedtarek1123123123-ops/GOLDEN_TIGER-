@@ -65,7 +65,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   // Build all products list for RecentlyViewed
   const allProducts: Product[] = [];
   for (const cat of categories) {
-    const prods = await getProductsByCategory(cat.slug);
+    const { products: prods } = await getProductsByCategory(cat.slug);
     allProducts.push(...prods);
   }
 
